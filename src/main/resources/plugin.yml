@@ -1,0 +1,6 @@
+name: ImageWings
+version: ${project.version}
+main: me.ialistannen.imagewings.ImageWings
+depend: [PerceiveCore]
+authors: [I_Al_Istannen]
+description: Allows you to create in game particle wings from images
