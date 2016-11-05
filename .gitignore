@@ -1,0 +1,6 @@
+
+.gitignore
+.idea/
+ImageWings.iml
+src/test/
+target/
