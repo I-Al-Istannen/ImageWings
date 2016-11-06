@@ -14,6 +14,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
+import org.bukkit.inventory.EquipmentSlot
 import java.awt.image.BufferedImage
 import java.util.function.BiConsumer
 
@@ -148,7 +149,9 @@ class ArmorStandEditor(imageParser: ImageParser,
 
         @EventHandler
         fun onInteract(interactEvent: PlayerInteractEvent) {
-            currentState.apply(interactEvent, editor)
+            if (interactEvent.hand == EquipmentSlot.HAND) {
+                currentState.apply(interactEvent, editor)
+            }
         }
 
         @EventHandler
