@@ -15,7 +15,7 @@ Then create a file in there, ending with ".wingMeta". Just a normal, renamed tex
 ```yaml
 # The path to the image
 image_path: "S:/Minecraft/Test/coolWingSmall.png"
-# The direction of the player is taken and multiplied by this value and then added to the center
+# The direction of the entity is taken and multiplied by this value and then added to the center
 # This allows us to offset the wings a bit. The default offsets them by 0.1 blocks
 player_vector_multiplier: -0.1
 # The pitch in radian. You will most certainly want to leave it.
@@ -58,7 +58,7 @@ Then I used the file I posted above and reloaded (which currently displays it).
 ## Result:
 ![Bad wing](http://i.imgur.com/HfnuRzy.png)
 
-Yes, the two particles and the angle do not make it very clear, but it is actually a bit behind the player.
+Yes, the two particles and the angle do not make it very clear, but it is actually a bit behind the entity.
 
 
 # Dependencies

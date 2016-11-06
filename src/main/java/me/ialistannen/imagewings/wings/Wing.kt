@@ -1,7 +1,7 @@
 package me.ialistannen.imagewings.wings
 
 import com.perceivedev.perceivecore.particle.math.RotationMatrices
-import org.bukkit.entity.Player
+import org.bukkit.entity.Entity
 import java.util.*
 
 /**
@@ -16,13 +16,13 @@ class Wing(var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Do
 
 
     /**
-     * Displays this wing for a [Player]
+     * Displays this wing for a [Entity]
      *
-     * @param player The [Player] to display it for
+     * @param entity The [Entity] to display it for
      */
-    fun display(player: Player) {
-        val yawRad = Math.toRadians(player.location.yaw.toDouble()) + yawRadAddition
-        val center = player.location
+    fun display(entity: Entity) {
+        val yawRad = Math.toRadians(entity.location.yaw.toDouble()) + yawRadAddition
+        val center = entity.location
         run {
             val addingVector = center.direction.clone().multiply(playerVectorMultiplier)
             addingVector.setY(0)
