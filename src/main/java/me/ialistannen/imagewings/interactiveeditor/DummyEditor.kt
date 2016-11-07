@@ -1,6 +1,7 @@
 package me.ialistannen.imagewings.interactiveeditor
 
 import org.bukkit.Location
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.event.Listener
 
 /**
@@ -37,4 +38,6 @@ interface DummyEditor : Listener {
     fun display()
 
     fun destroy()
+
+    fun saveToConfig(config: ConfigurationSection)
 }

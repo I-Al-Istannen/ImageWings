@@ -1,0 +1,23 @@
+# +--------------------------------+
+# |                                |
+# |            LANGUAGE            |
+# |                                |
+# +--------------------------------+
+
+# The language tag. For it to work, you must create a file called "Messages_<tag>.properties" in the "language" folder.
+# The tag is the language tag: "en" for english, "de" for german and so on.
+# After you created the file and translated it, you need to enter your tag below.
+language: "en"
+
+# +--------------------------------+
+# |                                |
+# |           PERMISISONS          |
+# |                                |
+# +--------------------------------+
+
+# Here are all permissions of that plugin listed. You can change them here, if you want:
+permissions:
+  commands:
+    help: "imagewings.help"
+    main: "imagewings.main"
+    edit: "imagewings.edit"

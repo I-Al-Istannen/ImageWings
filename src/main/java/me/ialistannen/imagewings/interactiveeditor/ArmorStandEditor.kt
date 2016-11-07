@@ -6,6 +6,7 @@ import me.ialistannen.imagewings.parser.ImageParser
 import me.ialistannen.imagewings.wings.Wing
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.ArmorStand
 import org.bukkit.event.EventHandler
 import org.bukkit.event.HandlerList
@@ -129,6 +130,21 @@ class ArmorStandEditor(imageParser: ImageParser,
         armorStand.remove()
         HandlerList.unregisterAll(myListener)
         HandlerList.unregisterAll(this)
+    }
+
+    override fun saveToConfig(config: ConfigurationSection) {
+
+        config.set("player_vector_multiplier", getPlayerVectorMultiplier())
+
+        val parserSection = config.getConfigurationSection("parser")
+        parserSection.set("xScale", getXScale())
+        parserSection.set("yScale", getYScale())
+
+        parserSection.set("xOffsetAbsolute", getXOffset())
+        parserSection.set("yOffsetAbsolute", getYOffset())
+
+        parserSection.set("xGranularity", getXGranularity())
+        parserSection.set("yGranularity", getYGranularity())
     }
     //</editor-fold>
 
