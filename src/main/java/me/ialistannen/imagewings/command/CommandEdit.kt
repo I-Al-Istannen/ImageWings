@@ -8,6 +8,8 @@ import me.ialistannen.imagewings.ImageWings
 import me.ialistannen.imagewings.interactiveeditor.ArmorStandEditor
 import me.ialistannen.imagewings.interactiveeditor.DummyEditor
 import me.ialistannen.imagewings.parser.ImageParser
+import me.ialistannen.imagewings.parser.Parser
+import me.ialistannen.imagewings.wings.WingIndexer
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
@@ -50,7 +52,7 @@ class CommandEdit : Listener, TranslatedCommandNode(
     override fun tabComplete(sender: CommandSender, chat: MutableList<String>, index: Int): List<String> {
         val list = ArrayList<String>()
 
-        if (index == 0 && sender is Player && sender.uniqueId in playerMap) {
+        if (sender is Player && sender.uniqueId in playerMap) {
             list.add(ImageWings.tr("command.edit.stop.save.keyword"))
             list.add(ImageWings.tr("command.edit.stop.discard.keyword"))
         }
@@ -60,7 +62,7 @@ class CommandEdit : Listener, TranslatedCommandNode(
     override fun executePlayer(player: Player, vararg args: String): CommandResult {
 
         if (player.uniqueId in playerMap) {
-            if (args.size < 1) {
+            if (args.isEmpty()) {
                 player.sendMessage(ImageWings.trWithPrefix("command.edit.stop.usage"))
                 return CommandResult.SUCCESSFULLY_INVOKED
             }
@@ -71,9 +73,23 @@ class CommandEdit : Listener, TranslatedCommandNode(
 
             if (decision == ImageWings.tr("command.edit.stop.save.keyword")) {
                 val config = YamlConfiguration.loadConfiguration(displayer.configPath.toFile())
+
+                // delete old wing
+                try {
+                    val parser = Parser(YamlConfiguration.loadConfiguration(displayer.configPath.toFile()))
+                    ImageWings.wingDisplayManager.removeWing(parser.wing)
+                } catch (ignore: IllegalArgumentException) {
+                    // the file was modified (and damaged) while being edited. Will cause some glitches (wing appears twice) if I ignore it,
+                    // but it is probably nicer than the alternative: Logging an error
+                }
+
                 displayer.dummyEditor.saveToConfig(config)
 
                 config.save(displayer.configPath.toFile())
+
+                // reindex the wing
+                val indexer = WingIndexer(displayer.configPath)
+                indexer.index(ImageWings.wingDisplayManager)
 
                 player.sendMessage(ImageWings.trWithPrefix("command.edit.stopped.editing.saved", wingFileName))
             } else if (decision == ImageWings.tr("command.edit.stop.discard.keyword")) {
@@ -90,7 +106,7 @@ class CommandEdit : Listener, TranslatedCommandNode(
             return CommandResult.SUCCESSFULLY_INVOKED
         }
 
-        if (args.size < 1) {
+        if (args.isEmpty()) {
             return CommandResult.SEND_USAGE
         }
 

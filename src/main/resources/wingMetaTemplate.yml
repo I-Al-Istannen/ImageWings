@@ -1,0 +1,53 @@
+# The path to the image. Relative to the "/plugins/ImageWings/images" folder,
+# but an absolute path works too
+image_path: "yourImage.png"
+
+# The name of the item in the "/imageWings equip" gui
+item_name: "&c&lCool&a&lWings"
+# The lore of the item in the "/imageWings equip" gui
+item_lore:
+- "Coolest Wings &7EVA"
+# The material of the item in the "/imageWings equip" gui
+item_material: "FEATHER"
+
+# The permission to be able to equip this wing
+permission: "imageWings.cool.wing"
+
+# The multiplier with the player's direction. This will be added to the plaer position and forms the center.
+# If this is negative, the wing will be behind the player.
+# If this is positive, the wing will be in front of the player.
+player_vector_multiplier: 0.01
+# The Pitch angle. Rotates around the x axis
+# In radian. May be an equation like "3 + 5 * PI / 20"
+pitch_rad: PI
+# The yaw angle addition. Rotates around the y axis.
+# The base is "-1 * playerYaw", to make it appear behind the player
+# In radian. May be an equation like "3 + 5 * PI / 20"
+yaw_rad_addition: PI
+
+# The parser section
+parser:
+  # The x scale of the image. Smaller ==> Smaller wings
+  xScale: 0.05
+  # The y scale of the image. Smaller ==> Smaller wings
+  yScale: 0.05
+  
+  # The x offset, the image will have
+  xOffsetAbsolute: 90.0
+  # The y offset, the image will have
+  yOffsetAbsolute: 85.0
+  
+  # The granularity. This is the amount of pixels it skips while parsing the image each step.
+  # Lower ==> More detailed image, but more particles.
+  xGranularity: 1
+  yGranularity: 1
+  
+  # The colour mapper. This is able to map colour ranges in the image to different particles,
+  # so you can make a wing consisting of multiple particles.
+  # The format is as follows:
+  # <start Red>,<start Green>,<start Blue> to <end Red>,<end Grren>,<end Blue> is <particle>
+  # A full list of particles can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Particle.html
+  # The values are INCLUSIVE on both sides (a closed range).
+  colourMapper:
+  - 0,19,127 to 0,19,127 is SUSPENDED_DEPTH
+  - 10,10,13 to 10,10,13 is ENCHANTMENT_TABLE

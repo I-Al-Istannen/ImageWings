@@ -9,6 +9,27 @@
 # After you created the file and translated it, you need to enter your tag below.
 language: "en"
 
+
+# +--------------------------------+
+# |                                |
+# |           WING DISPLAY         |
+# |                                |
+# +--------------------------------+
+
+# The delay between updating the wings for the player
+wing_display_delay: 1s
+
+
+# +--------------------------------+
+# |                                |
+# |              EQUIP             |
+# |                                |
+# +--------------------------------+
+
+# If true, wings the player doesn't have peermission for will be shown too
+show_wings_without_permission: false
+
+
 # +--------------------------------+
 # |                                |
 # |           PERMISISONS          |
@@ -21,3 +42,5 @@ permissions:
     help: "imagewings.help"
     main: "imagewings.main"
     edit: "imagewings.edit"
+    equip: "imagewings.equip"
+    generate_template: "imagewings.generate.template"

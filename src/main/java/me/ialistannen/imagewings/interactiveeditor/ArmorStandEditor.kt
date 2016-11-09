@@ -6,6 +6,7 @@ import me.ialistannen.imagewings.parser.ImageParser
 import me.ialistannen.imagewings.wings.Wing
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.ArmorStand
 import org.bukkit.event.EventHandler
@@ -123,7 +124,7 @@ class ArmorStandEditor(imageParser: ImageParser,
 
         val resultSet = parser.resultSet
 
-        wing = Wing(resultSet, vectorMultiplier, Math.PI, 0.0)
+        wing = Wing(resultSet, vectorMultiplier, Math.PI, 0.0, "", Material.STONE, emptyList(), "")
     }
 
     override fun destroy() {

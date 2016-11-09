@@ -6,6 +6,8 @@ import com.perceivedev.perceivecore.command.DefaultCommandExecutor
 import com.perceivedev.perceivecore.command.DefaultTabCompleter
 import com.perceivedev.perceivecore.language.I18N
 import me.ialistannen.imagewings.command.CommandImageWings
+import me.ialistannen.imagewings.display.WingDisplayManager
+import me.ialistannen.imagewings.wings.WingIndexer
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
@@ -18,6 +20,8 @@ class ImageWings : JavaPlugin() {
         lateinit var instance: ImageWings
             private set
         lateinit var language: I18N
+            private set
+        lateinit var wingDisplayManager: WingDisplayManager
             private set
 
         /**
@@ -47,16 +51,25 @@ class ImageWings : JavaPlugin() {
 
     override fun onEnable() {
         instance = this
-        
+
         dataFolder.mkdirs()
         I18N.copyDefaultFiles(this, true, "me.ialistannen.imagewings.language")
 
         language = I18N(this, "me.ialistannen.imagewings.language")
 
-        reload()
+        reloadConfigs()
+        reloadWings()
     }
 
-    private fun reload() {
+    private fun reloadWings() {
+        wingDisplayManager = WingDisplayManager()
+        val wingIndexer = WingIndexer(dataFolder.toPath().resolve("images"))
+        wingIndexer.index(wingDisplayManager)
+
+        logger.info("Loaded ${wingDisplayManager.getAllWings().size} wings.")
+    }
+
+    private fun reloadConfigs() {
         reloadConfig()
 
         // un-register old command

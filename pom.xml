@@ -14,7 +14,7 @@
     <description>Allows you to create in game particle wings from images</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.0.4</kotlin.version>
+        <kotlin.version>1.0.5</kotlin.version>
     </properties>
 
     <build>
@@ -48,7 +48,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
+                <version>1.0.5</version>
                 <executions>
                     <execution>
                         <id>compile</id>

@@ -6,6 +6,4 @@ import org.bukkit.util.Vector
 /**
  * A point displayed by a given [Particle]
  */
-data class ParticlePoint(val offset: Vector, val particle: Particle) {
-    
-}
+data class ParticlePoint(val offset: Vector, val particle: Particle)

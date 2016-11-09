@@ -3,12 +3,12 @@ package me.ialistannen.imagewings.parser
 import com.udojava.evalex.Expression
 import me.ialistannen.imagewings.ImageWings
 import me.ialistannen.imagewings.wings.Wing
+import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import java.awt.image.BufferedImage
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import javax.imageio.ImageIO
 
 /**
@@ -24,7 +24,8 @@ class Parser(section: ConfigurationSection) {
     private val yawRadAddition: Double
 
     init {
-        imagePath = Paths.get(ensureGetString(section, "image_path"))
+        // This will actually work. If you pass an absolute path, it will use the absolute, else it will make it relative
+        imagePath = ImageWings.instance.dataFolder.toPath().resolve("images").resolve(ensureGetString(section, "image_path"))
 
         if (Files.notExists(imagePath)) {
             ImageWings.instance.logger.warning("The image file '${imagePath.toAbsolutePath()}' doesn't exist.")
@@ -35,6 +36,13 @@ class Parser(section: ConfigurationSection) {
 
         pitchRad = Expression(ensureGetString(section, "pitch_rad")).eval().toDouble()
         yawRadAddition = Expression(ensureGetString(section, "yaw_rad_addition")).eval().toDouble()
+
+        val itemName = ensureGetString(section, "item_name")
+        val loreList = ensureGetStringList(section, "item_lore")
+        val itemMaterial = Material.matchMaterial(ensureGetString(section, "item_material"))
+                ?: throw IllegalArgumentException("Material '${ensureGetString(section, "item_material")}' is unknown.")
+
+        val permission = ensureGetString(section, "permission")
 
         val image: BufferedImage
 
@@ -47,7 +55,7 @@ class Parser(section: ConfigurationSection) {
         }
 
         val imageParser = ImageParser(section.getConfigurationSection("parser"), image)
-        wing = Wing(imageParser.resultSet, playerVectorMultiplier, pitchRad, yawRadAddition)
+        wing = Wing(imageParser.resultSet, playerVectorMultiplier, pitchRad, yawRadAddition, itemName, itemMaterial, loreList, permission)
     }
 }
 
