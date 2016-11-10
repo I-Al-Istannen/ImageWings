@@ -16,7 +16,7 @@ permission: "imageWings.cool.wing"
 # The multiplier with the player's direction. This will be added to the plaer position and forms the center.
 # If this is negative, the wing will be behind the player.
 # If this is positive, the wing will be in front of the player.
-player_vector_multiplier: 0.01
+player_vector_multiplier: -0.2
 # The Pitch angle. Rotates around the x axis
 # In radian. May be an equation like "3 + 5 * PI / 20"
 pitch_rad: PI
