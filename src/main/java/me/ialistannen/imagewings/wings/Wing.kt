@@ -1,8 +1,10 @@
 package me.ialistannen.imagewings.wings
 
 import com.perceivedev.perceivecore.particle.math.RotationMatrices
+import me.ialistannen.imagewings.nmsmapping.NmsMapperBodyYaw
 import org.bukkit.Material
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import java.util.*
 
 /**
@@ -23,12 +25,18 @@ class Wing(var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Do
      *
      * @param entity The [Entity] to display it for
      */
-    fun display(entity: Entity) {
-        val yawRad = Math.toRadians(entity.location.yaw.toDouble()) + yawRadAddition
+    fun display(entity: LivingEntity) {
+        val bodyYawDegree = NmsMapperBodyYaw.getBodyYaw(entity) ?: return
+
+        val yawRad = Math.toRadians(bodyYawDegree.toDouble()) + yawRadAddition
+
         val center = entity.location
         run {
-            val addingVector = center.direction.clone().multiply(playerVectorMultiplier)
-            addingVector.setY(0)
+            // inefficient code: 
+            val cloneCenter = center.clone()
+            cloneCenter.yaw = Math.toDegrees(yawRad).toFloat() * -1 // do not ask me why it is flipped. PLEASE
+
+            val addingVector = cloneCenter.direction.setY(0).normalize().multiply(playerVectorMultiplier)
             center.add(addingVector)
         }
         val world = center.world

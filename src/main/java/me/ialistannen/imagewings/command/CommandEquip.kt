@@ -64,13 +64,14 @@ class CommandEquip : TranslatedCommandNode(
                                     player.sendMessage(ImageWings.trWithPrefix("general.status.no.permission"))
                                     return@Consumer
                                 }
-                                player.sendMessage(TextUtils.colorize("You clicked me ${wing.itemName}"))
 
                                 val playerWing = ImageWings.wingDisplayManager.getPlayerWing(player)
                                 if (playerWing == wing) {
                                     ImageWings.wingDisplayManager.removePlayer(player)
+                                    player.sendMessage(ImageWings.trWithPrefix("command.unequipped.message"))
                                 } else {
                                     ImageWings.wingDisplayManager.addPlayer(player, wing)
+                                    player.sendMessage(ImageWings.trWithPrefix("command.equip.message", wing.itemName))
                                 }
 
                                 gui.reRender()
@@ -186,7 +187,7 @@ class PagedPane(width: Int, height: Int) : AnchorPane(width, height) {
     private fun addNewPane() {
         val pane = AnchorPane(width, height)
 
-        pane.addComponent(SimpleLabel(Dimension(9, 1), StandardDisplayTypes.FLAT, DisplayColor.BLACK, ""), 0, height - 2)
+        pane.addComponent(SimpleLabel(Dimension(9, 1), StandardDisplayTypes.FLAT, DisplayColor.BLACK, " "), 0, height - 2)
         pages.add(pane)
     }
 
@@ -198,6 +199,11 @@ class PagedPane(width: Int, height: Int) : AnchorPane(width, height) {
         if (index < pages.lastIndex) {
             addButton(page, index, width - 1, height - 1, "pageable.gui.next.button", 1)
         }
+
+        if (width > 2) {
+            val xPosition = width / 2
+            addButton(page, index, xPosition, height - 1, "pageable.gui.current.label", 0)
+        }
     }
 
     private fun addButton(page: AnchorPane, index: Int, x: Int, y: Int, baseKey: String, pageMod: Int) {
@@ -205,10 +211,10 @@ class PagedPane(width: Int, height: Int) : AnchorPane(width, height) {
 
         originalButton.ifPresent { page.removeComponent(it) }
 
-        val buttonName = ImageWings.tr("$baseKey.name", index + pageMod + 1)
-        val buttonLoreOne = ImageWings.tr("$baseKey.lore.one", index + pageMod + 1)
-        val buttonLoreTwo = ImageWings.tr("$baseKey.lore.two", index + pageMod + 1)
-        val materialName = ImageWings.tr("$baseKey.material", index + pageMod + 1)
+        val buttonName = ImageWings.tr("$baseKey.name", index + pageMod + 1, pages.size)
+        val buttonLoreOne = ImageWings.tr("$baseKey.lore.one", index + pageMod + 1, pages.size)
+        val buttonLoreTwo = ImageWings.tr("$baseKey.lore.two", index + pageMod + 1, pages.size)
+        val materialName = ImageWings.tr("$baseKey.material", index + pageMod + 1, pages.size)
         val material = Material.matchMaterial(materialName) ?: Material.WOOL
 
         val itemStack: ItemStack = ItemFactory.builder(material)
