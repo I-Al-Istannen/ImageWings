@@ -3,15 +3,17 @@
 image_path: "yourImage.png"
 
 # The name of the item in the "/imageWings equip" gui
-item_name: "&c&lCool&a&lWings"
+item_name: "&c&lExample&a&lWings"
 # The lore of the item in the "/imageWings equip" gui
 item_lore:
-- "Coolest Wings &7EVA"
+- "&7An example wing"
+- "  &cThis is the default template"
+- "  &cYou can change it in the /images/ folder"
 # The material of the item in the "/imageWings equip" gui
 item_material: "FEATHER"
 
 # The permission to be able to equip this wing
-permission: "imageWings.cool.wing"
+permission: "imageWings.example.wing"
 
 # The multiplier with the player's direction. This will be added to the plaer position and forms the center.
 # If this is negative, the wing will be behind the player.
