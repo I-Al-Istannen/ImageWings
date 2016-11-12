@@ -2,9 +2,12 @@ package me.ialistannen.imagewings.wings
 
 import com.perceivedev.perceivecore.particle.math.RotationMatrices
 import me.ialistannen.imagewings.nmsmapping.NmsMapperBodyYaw
+import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
+import org.bukkit.util.Vector
 import java.util.*
 
 /**
@@ -27,10 +30,20 @@ class Wing(var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Do
      */
     fun display(entity: LivingEntity) {
         val bodyYawDegree = NmsMapperBodyYaw.getBodyYaw(entity) ?: return
-
-        val yawRad = Math.toRadians(bodyYawDegree.toDouble()) + yawRadAddition
-
         val center = entity.location
+
+        display(center, bodyYawDegree.toDouble())
+    }
+
+    /**
+     * Displays this wing for a [Entity]
+     *
+     * @param center The [Location] to use as a center
+     * @param yawDegree The angle "YAW" in Degree
+     */
+    fun display(center: Location, yawDegree: Double) {
+        val yawRad = Math.toRadians(yawDegree) + yawRadAddition
+
         run {
             // inefficient code: 
             val cloneCenter = center.clone()
@@ -44,8 +57,25 @@ class Wing(var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Do
         for ((offset, particle) in points) {
             val rotatedOffset = RotationMatrices.rotateRadian(offset, yawRad, pitchRad)
 
-            world.spawnParticle(particle, center.clone().add(rotatedOffset), 1, 0.0, 0.0, 0.0, 0.0)
+            world.spawnParticle(particle, center.clone().add(rotatedOffset).add(getParticleFix(particle)),
+                    1, // amount
+                    0.0, // x offset
+                    0.0, // y offset
+                    0.0, // z offset
+                    0.0   // speed
+            )
         }
+    }
+
+    private val VECTOR_ZERO = Vector()
+    private fun getParticleFix(particle: Particle): Vector {
+        if (particle == Particle.DRIP_LAVA
+                || particle == Particle.DRIP_WATER
+                || particle == Particle.SUSPENDED_DEPTH
+                || particle == Particle.SUSPENDED) {
+            return Vector(0.1, 0.0, 0.1)
+        }
+        return VECTOR_ZERO
     }
 
     override fun equals(other: Any?): Boolean {

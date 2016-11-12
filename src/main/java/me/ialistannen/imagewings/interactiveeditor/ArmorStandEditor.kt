@@ -14,6 +14,7 @@ import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.inventory.EquipmentSlot
@@ -24,7 +25,8 @@ import java.util.function.BiConsumer
  * A dummy ArmorStand to review Wing changes
  */
 class ArmorStandEditor(imageParser: ImageParser,
-                       private val armorStand: ArmorStand) : DummyEditor {
+                       private val armorStand: ArmorStand,
+                       private var vectorMultiplier: Double) : DummyEditor {
 
     private var wing: Wing? = null
 
@@ -40,7 +42,7 @@ class ArmorStandEditor(imageParser: ImageParser,
     private var xScale: Double = imageParser.xScale
     private var yScale: Double = imageParser.yScale
 
-    private var vectorMultiplier: Double = 0.01
+//    private var vectorMultiplier: Double = 0.01
 
     private val myListener = MyListener(this)
 
@@ -116,7 +118,7 @@ class ArmorStandEditor(imageParser: ImageParser,
         if (!armorStand.isValid) {
             return
         }
-        wing?.display(armorStand)
+        wing?.display(armorStand.location, armorStand.location.yaw.toDouble())
     }
 
     private fun update() {
@@ -158,6 +160,13 @@ class ArmorStandEditor(imageParser: ImageParser,
     fun onArmorStandDamage(damageEvent: EntityDamageEvent) {
         if (damageEvent.entity == armorStand) {
             damageEvent.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onArmorStandEdit(editEvent: PlayerInteractEntityEvent) {
+        if (editEvent.rightClicked == armorStand) {
+            editEvent.isCancelled = true
         }
     }
 

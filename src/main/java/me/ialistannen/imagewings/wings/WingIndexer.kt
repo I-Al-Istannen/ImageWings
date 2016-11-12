@@ -21,11 +21,15 @@ class WingIndexer(val path: Path) {
      * Reads the folder and sub dirs and indexes the [Wing]s
      *
      * @param wingDisplayManager The [WingDisplayManager] to add the wings too
+     *
+     * @return False if an error occurred
      */
-    fun index(wingDisplayManager: WingDisplayManager) {
+    fun index(wingDisplayManager: WingDisplayManager): Boolean {
         if (Files.notExists(path)) {
-            return
+            return true
         }
+
+        var result: Boolean = true
 
         Files.walkFileTree(path, object : FileVisitor<Path> {
             override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
@@ -41,9 +45,10 @@ class WingIndexer(val path: Path) {
 
                 try {
                     val parser = Parser(YamlConfiguration.loadConfiguration(file.toFile()))
-                    wingDisplayManager.addWing(parser.wing)
+                    wingDisplayManager.addWing(parser.wing, fileName.replace(".wingMeta", ""))
                 } catch (e: IllegalArgumentException) {
                     ImageWings.instance.logger.log(Level.WARNING, "Couldn't parse file '$fileName'", e)
+                    result = false
                 }
 
                 return FileVisitResult.CONTINUE
@@ -51,6 +56,7 @@ class WingIndexer(val path: Path) {
 
             override fun visitFileFailed(file: Path, exc: IOException): FileVisitResult {
                 ImageWings.instance.logger.log(Level.WARNING, "Couldn't index file '${file.fileName}'", exc)
+                result = false
                 return FileVisitResult.CONTINUE
             }
 
@@ -58,5 +64,7 @@ class WingIndexer(val path: Path) {
                 return FileVisitResult.CONTINUE
             }
         })
+
+        return result
     }
 }

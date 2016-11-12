@@ -4,6 +4,7 @@ import com.perceivedev.perceivecore.PerceiveCore
 import com.perceivedev.perceivecore.command.CommandResult
 import com.perceivedev.perceivecore.command.CommandSenderType
 import com.perceivedev.perceivecore.command.TranslatedCommandNode
+import com.perceivedev.perceivecore.util.ItemFactory
 import me.ialistannen.imagewings.ImageWings
 import me.ialistannen.imagewings.interactiveeditor.ArmorStandEditor
 import me.ialistannen.imagewings.interactiveeditor.DummyEditor
@@ -11,6 +12,7 @@ import me.ialistannen.imagewings.parser.ImageParser
 import me.ialistannen.imagewings.parser.Parser
 import me.ialistannen.imagewings.wings.WingIndexer
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.ArmorStand
@@ -55,6 +57,8 @@ class CommandEdit : Listener, TranslatedCommandNode(
         if (sender is Player && sender.uniqueId in playerMap) {
             list.add(ImageWings.tr("command.edit.stop.save.keyword"))
             list.add(ImageWings.tr("command.edit.stop.discard.keyword"))
+        } else if (index == 0) {
+            list.addAll(ImageWings.wingDisplayManager.getAllWingFileNames())
         }
         return list
     }
@@ -121,6 +125,16 @@ class CommandEdit : Listener, TranslatedCommandNode(
 
         val wingMetaConfiguration = YamlConfiguration.loadConfiguration(wingMetaPath.toFile())
 
+
+        // ====== PLAYER VECTOR MULTIPLIER ======
+        if (!wingMetaConfiguration.isDouble("player_vector_multiplier")) {
+            player.sendMessage(ImageWings.trWithPrefix("command.edit.wing.meta.misses.player.vector.multiplier", name))
+            return CommandResult.SUCCESSFULLY_INVOKED
+        }
+        val vectorMultiplier = wingMetaConfiguration.getDouble("player_vector_multiplier")
+
+
+        // ====== IMAGE ======
         if (!wingMetaConfiguration.isString("image_path")) {
             player.sendMessage(ImageWings.trWithPrefix("command.edit.wing.meta.misses.image.path", name))
             return CommandResult.SUCCESSFULLY_INVOKED
@@ -146,6 +160,8 @@ class CommandEdit : Listener, TranslatedCommandNode(
             return CommandResult.SUCCESSFULLY_INVOKED
         }
 
+
+        // ====== PARSER ======
         val parserSection = wingMetaConfiguration.getConfigurationSection("parser")
 
         if (parserSection == null) {
@@ -161,12 +177,21 @@ class CommandEdit : Listener, TranslatedCommandNode(
             return CommandResult.SUCCESSFULLY_INVOKED
         }
 
-        val armorStand: ArmorStand = player.world.spawnEntity(player.location, EntityType.ARMOR_STAND) as ArmorStand
+
+        // ====== DISPLAYER ======
+        val armorStandLocation = player.location.clone()
+        armorStandLocation.yaw = 0f
+        armorStandLocation.pitch = 0f
+        val armorStand: ArmorStand = player.world.spawnEntity(armorStandLocation, EntityType.ARMOR_STAND) as ArmorStand
 
         armorStand.setGravity(false)
         armorStand.isInvulnerable = true
+        armorStand.helmet = ItemFactory.builder(Material.SKULL_ITEM)
+                .setDurability(3.toShort())
+                .setSkullOwner(player)
+                .build()
 
-        val displayer = Displayer(playerID = player.uniqueId, dummyEditor = ArmorStandEditor(imageParser, armorStand), configPath = wingMetaPath)
+        val displayer = Displayer(playerID = player.uniqueId, dummyEditor = ArmorStandEditor(imageParser, armorStand, vectorMultiplier), configPath = wingMetaPath)
 
         playerMap.put(player.uniqueId, displayer)
 

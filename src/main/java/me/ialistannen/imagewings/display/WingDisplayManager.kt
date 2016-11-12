@@ -18,7 +18,7 @@ import java.util.logging.Level
  */
 class WingDisplayManager {
     private val playerWingsMap: MutableMap<UUID, PlayerWing> = HashMap()
-    private val wings: MutableCollection<Wing> = HashSet()
+    private val wings: MutableMap<Wing, String> = HashMap()
     private var runner: BukkitRunnable? = null
 
     init {
@@ -29,9 +29,10 @@ class WingDisplayManager {
      * Adds a wing
      *
      * @param wing The wing to add
+     * @param fileName The name of the file it was loaded from
      */
-    fun addWing(wing: Wing) {
-        wings.add(wing)
+    fun addWing(wing: Wing, fileName: String) {
+        wings.put(wing, fileName)
     }
 
     /**
@@ -41,6 +42,12 @@ class WingDisplayManager {
      */
     fun removeWing(wing: Wing) {
         wings.remove(wing)
+
+
+        // remove the players using the wing
+        val toRemove: List<UUID> = playerWingsMap.filterValues { it.wing == wing }.map { it.key }
+
+        toRemove.forEach { playerWingsMap.remove(it) }
     }
 
     /**
@@ -48,13 +55,21 @@ class WingDisplayManager {
      *
      * @param player The player to add thr wing to
      * @param wing The [Wing] to add
+     *
+     * @return false if the wing was not in [getAllWings]
      */
-    fun addPlayer(player: Player, wing: Wing) {
+    fun addPlayer(player: Player, wing: Wing): Boolean {
+        // I wonder if this works..
+        if (wing !in wings) {
+            return false
+        }
         playerWingsMap.put(player.uniqueId, PlayerWing(wing))
 
         if (runner == null) {
             startRunner()
         }
+
+        return true
     }
 
     /**
@@ -85,10 +100,35 @@ class WingDisplayManager {
     }
 
     /**
+     * Returns all players and their wings
+     *
+     * @return A Collection of all players and their wings
+     */
+    fun getAllPlayersWing(): Collection<Pair<UUID, Wing>> {
+        return playerWingsMap.map { Pair(it.key, it.value.wing) }
+    }
+
+    /**
      * @return All the wings
      */
     fun getAllWings(): Collection<Wing> {
-        return Collections.unmodifiableCollection(wings)
+        return Collections.unmodifiableCollection(wings.keys)
+    }
+
+    /**
+     * @return All the files the wings were loaded from
+     */
+    fun getAllWingFileNames(): Collection<String> {
+        return Collections.unmodifiableCollection(wings.values)
+    }
+
+    /**
+     * Destroys this display manager
+     */
+    fun destroy() {
+        playerWingsMap.clear()
+        wings.clear()
+        stopRunner()
     }
 
 
@@ -135,12 +175,15 @@ class WingDisplayManager {
                 continue
             }
 
-            val oldLocation = cache.getIfPresent(uuid)
-            cache.put(uuid, player.location)
+            // check if the player moved and respect the config on that matter
+            if (!ImageWings.instance.config.getBoolean("spawn_when_moving")) {
+                val oldLocation = cache.getIfPresent(uuid)
+                cache.put(uuid, player.location)
 
-            if (oldLocation != null) {
-                if (oldLocation.distance(player.location) > 0.5) {
-                    continue
+                if (oldLocation != null) {
+                    if (oldLocation.distance(player.location) > 0.5) {
+                        continue
+                    }
                 }
             }
 

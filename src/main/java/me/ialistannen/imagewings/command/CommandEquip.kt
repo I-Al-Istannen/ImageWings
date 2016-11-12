@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
 import java.util.*
 import java.util.function.Consumer
+import kotlin.comparisons.compareBy
 
 /**
  * Lets the player equip a wing
@@ -53,6 +54,7 @@ class CommandEquip : TranslatedCommandNode(
                         player.hasPermission(it.permission)
                     }
                 }
+                .sortedWith(compareBy({ it.itemName.replace(Regex("&[0-9a-flmnor]", RegexOption.IGNORE_CASE), "") }))
                 .forEach { wing ->
                     pagedPane.addComponentSimple(WingButton(
                             ItemFactory.builder(wing.itemMaterial)

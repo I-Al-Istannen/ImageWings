@@ -18,6 +18,8 @@ language: "en"
 
 # The delay between updating the wings for the player
 wing_display_delay: 1s
+# Whether the wings should continue spawning if the player is moving
+spawn_when_moving: false
 
 
 # +--------------------------------+
@@ -44,3 +46,4 @@ permissions:
     edit: "imagewings.edit"
     equip: "imagewings.equip"
     generate_template: "imagewings.generate.template"
+    reload: "imagewings.reload"

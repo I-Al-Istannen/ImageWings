@@ -19,6 +19,7 @@ class CommandImageWings : TranslatedCommandNode(
         addChild(CommandEdit())
         addChild(CommandEquip())
         addChild(CommandGenerateTemplate())
+        addChild(CommandReload())
     }
 
     override fun tabComplete(sender: CommandSender, chat: MutableList<String>, index: Int): List<String> {

@@ -8,6 +8,7 @@ import com.perceivedev.perceivecore.language.I18N
 import me.ialistannen.imagewings.command.CommandImageWings
 import me.ialistannen.imagewings.display.WingDisplayManager
 import me.ialistannen.imagewings.wings.WingIndexer
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
@@ -15,6 +16,8 @@ import java.util.*
  * The main class
  */
 class ImageWings : JavaPlugin() {
+
+    private var wingManagerIsInitialized = false
 
     companion object {
         lateinit var instance: ImageWings
@@ -52,7 +55,10 @@ class ImageWings : JavaPlugin() {
     override fun onEnable() {
         instance = this
 
-        I18N.copyDefaultFiles(this, false, "me.ialistannen.imagewings.language")
+        // TODO: saveDefaultConfig()
+
+        // TODO: Make false
+        I18N.copyDefaultFiles(this, true, "me.ialistannen.imagewings.language")
 
         language = I18N(this, "me.ialistannen.imagewings.language")
 
@@ -60,15 +66,44 @@ class ImageWings : JavaPlugin() {
         reloadWings()
     }
 
-    private fun reloadWings() {
+    /**
+     * Reloads all wings.
+     *
+     * Destroys all current wings before that, but tries to keep the player's wings intact.
+     *
+     * @return False if an error occurred
+     */
+    fun reloadWings(): Boolean {
+        val old = if (wingManagerIsInitialized) {
+            wingDisplayManager
+        } else {
+            null
+        }
+
         wingDisplayManager = WingDisplayManager()
+        wingManagerIsInitialized = true
+
         val wingIndexer = WingIndexer(dataFolder.toPath().resolve("images"))
-        wingIndexer.index(wingDisplayManager)
+        val result = wingIndexer.index(wingDisplayManager)
 
         logger.info("Loaded ${wingDisplayManager.getAllWings().size} wings.")
+
+        if (old != null) {
+            // re-add the old wings
+            old.getAllPlayersWing().toMap()
+                    .mapKeys { Bukkit.getPlayer(it.key) }
+                    .filterKeys { it != null }
+                    .forEach { wingDisplayManager.addPlayer(it.key, it.value) }
+            old.destroy()
+        }
+
+        return result
     }
 
-    private fun reloadConfigs() {
+    /**
+     * Reloads all configs ([getConfig], [language] and commands)
+     */
+    fun reloadConfigs() {
         reloadConfig()
 
         // un-register old command

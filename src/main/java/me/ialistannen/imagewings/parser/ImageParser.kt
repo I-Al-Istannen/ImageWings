@@ -39,7 +39,7 @@ class ImageParser(var xScale: Double, var yScale: Double,
 
         for (x in 0..width - 1 step xGranularity) {
             for (y in 0..height - 1 step yGranularity) {
-                val xScaled = (x - xOffsetAbsolute) * xScale
+                val xScaled = (xOffsetAbsolute - x) * xScale
                 val yScaled = (y - yOffsetAbsolute) * yScale
 
                 val particle = colourMapper.getParticle(image.getRGB(x, y).getRgb()) ?: continue
