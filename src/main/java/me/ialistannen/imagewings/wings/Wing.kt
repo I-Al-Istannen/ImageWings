@@ -52,18 +52,11 @@ class Wing(var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Do
             val addingVector = cloneCenter.direction.setY(0).normalize().multiply(playerVectorMultiplier)
             center.add(addingVector)
         }
-        val world = center.world
 
         for ((offset, particle) in points) {
             val rotatedOffset = RotationMatrices.rotateRadian(offset, yawRad, pitchRad)
 
-            world.spawnParticle(particle, center.clone().add(rotatedOffset).add(getParticleFix(particle)),
-                    1, // amount
-                    0.0, // x offset
-                    0.0, // y offset
-                    0.0, // z offset
-                    0.0   // speed
-            )
+            particle.display(center.clone().add(rotatedOffset).add(getParticleFix(particle.particle)))
         }
     }
 

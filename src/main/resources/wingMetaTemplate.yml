@@ -50,6 +50,16 @@ parser:
   # <start Red>,<start Green>,<start Blue> to <end Red>,<end Grren>,<end Blue> is <particle>
   # A full list of particles can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Particle.html
   # The values are INCLUSIVE on both sides (a closed range).
+  # 
+  # As this would be too easy, there is something more!
+  # Some particles take extra data. These are "BLOCK_CRACK, BLOCK_DUST, ITEM_CRACK, REDSTONE, SPELL_MOB, SPELL_MOB_AMBIENT and NOTE"
+  # The first three just have " as <MATERIAL>:<DURABILITY>" behind the particle.
+  #   You can find the materials here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+  #     Example: "20,20,20 to 20,20,20 is BLOCK_CRACK as OBSIDIAN:0" will be obsidian cracking 
+  # The next 3 have " with rgb <red>,<green>,<blue>" behind the particle
+  #     Example: "20,20,20 to 20,20,20 is REDSTONE with rgb 255,255,255" will be a white Redstone dust
+  # The NOTE particle has " with note index <index>" behind the particle. Each note has a number, and that is how often you need to hit the note block
+  #     Example: "20,20,20 to 20,20,20 is NOTE with note index 5" will be a magenta-ish note
   colourMapper:
   - 0,19,127 to 0,19,127 is SUSPENDED_DEPTH
   - 10,10,13 to 10,10,13 is ENCHANTMENT_TABLE
