@@ -93,7 +93,7 @@ class WingDisplayManager {
      */
     fun getPlayerWing(player: Player): Wing? {
         val playerWing = playerWingsMap[player.uniqueId]
-        if (playerWing == null || !wings.contains(playerWing.wing)) {
+        if (playerWing == null || playerWing.wing !in wings) {
             return null
         }
         return playerWing.wing

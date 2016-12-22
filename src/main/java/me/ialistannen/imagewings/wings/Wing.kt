@@ -1,6 +1,6 @@
 package me.ialistannen.imagewings.wings
 
-import com.perceivedev.perceivecore.particle.math.RotationMatrices
+import com.perceivedev.perceivecore.util.math.RotationMatrices
 import me.ialistannen.imagewings.nmsmapping.NmsMapperBodyYaw
 import org.bukkit.Location
 import org.bukkit.Material
@@ -13,10 +13,10 @@ import java.util.*
 /**
  * A wing to display
  */
-class Wing(var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Double,
-           val pitchRad: Double, val yawRadAddition: Double,
-           val itemName: String, val itemMaterial: Material, val itemLore: List<String>,
-           val permission: String) {
+open class Wing(protected var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Double,
+                val pitchRad: Double, val yawRadAddition: Double,
+                val itemName: String, val itemMaterial: Material, val itemLore: List<String>,
+                val permission: String) {
 
     init {
         points = HashSet(points)
@@ -41,7 +41,17 @@ class Wing(var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Do
      * @param center The [Location] to use as a center
      * @param yawDegree The angle "YAW" in Degree
      */
-    fun display(center: Location, yawDegree: Double) {
+    open fun display(center: Location, yawDegree: Double) {
+        val yawRad = getYawAndModifyCenter(center, yawDegree)
+
+        for ((offset, particle) in points) {
+            val rotatedOffset = RotationMatrices.rotateRadian(offset, yawRad, pitchRad)
+
+            particle.display(center.clone().add(rotatedOffset).add(getParticleFix(particle.particle)))
+        }
+    }
+
+    protected fun getYawAndModifyCenter(center: Location, yawDegree: Double): Double {
         val yawRad = Math.toRadians(yawDegree) + yawRadAddition
 
         run {
@@ -52,12 +62,7 @@ class Wing(var points: MutableSet<ParticlePoint>, val playerVectorMultiplier: Do
             val addingVector = cloneCenter.direction.setY(0).normalize().multiply(playerVectorMultiplier)
             center.add(addingVector)
         }
-
-        for ((offset, particle) in points) {
-            val rotatedOffset = RotationMatrices.rotateRadian(offset, yawRad, pitchRad)
-
-            particle.display(center.clone().add(rotatedOffset).add(getParticleFix(particle.particle)))
-        }
+        return yawRad
     }
 
     private val VECTOR_ZERO = Vector()

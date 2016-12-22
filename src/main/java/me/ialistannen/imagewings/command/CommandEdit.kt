@@ -43,6 +43,7 @@ class CommandEdit : Listener, TranslatedCommandNode(
         Bukkit.getPluginManager().registerEvents(this, ImageWings.instance)
 
         PerceiveCore.getInstance().disableManager.addListener {
+            ->
             playerMap.values.forEach {
                 it.dummyEditor.destroy()
             }

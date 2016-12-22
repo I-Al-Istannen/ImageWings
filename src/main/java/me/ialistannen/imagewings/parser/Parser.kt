@@ -2,6 +2,8 @@ package me.ialistannen.imagewings.parser
 
 import com.udojava.evalex.Expression
 import me.ialistannen.imagewings.ImageWings
+import me.ialistannen.imagewings.wings.AnimatedWing
+import me.ialistannen.imagewings.wings.AnimatedWingFrame
 import me.ialistannen.imagewings.wings.Wing
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
@@ -9,6 +11,7 @@ import java.awt.image.BufferedImage
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.*
 import javax.imageio.ImageIO
 
 /**
@@ -44,18 +47,75 @@ class Parser(section: ConfigurationSection) {
 
         val permission = ensureGetString(section, "permission")
 
+        val type = ensureGetString(section, "parser_type")
+
+        when (type) {
+            "normal" -> {
+                wing = parseNormal(section,
+                        playerVectorMultiplier, pitchRad, yawRadAddition,
+                        itemName, itemMaterial, loreList,
+                        permission)
+            }
+            "animated" -> {
+                wing = parseAnimated(section,
+                        playerVectorMultiplier, pitchRad, yawRadAddition,
+                        itemName, itemMaterial, loreList,
+                        permission)
+            }
+            else -> {
+                throw IllegalArgumentException("Parser type not known: '$type'!")
+            }
+        }
+    }
+
+    private fun parseAnimated(section: ConfigurationSection,
+                              playerVectorMultiplier: Double,
+                              pitchRad: Double, yawRadAddition: Double,
+                              itemName: String, itemMaterial: Material, loreList: List<String>,
+                              permission: String): Wing {
+
+        val frames: LinkedList<AnimatedWingFrame> = LinkedList()
+        val parserSection = section.getConfigurationSection("parser")
+
+        val imageReader = ImageIO.getImageReadersByFormatName("gif").next()
+        ImageIO.createImageInputStream(imagePath.toFile()).use {
+            imageReader.input = it
+
+            val readFrames = GifParser().readGIF(imageReader)
+
+            for ((readImage, delay) in readFrames) {
+                val imageParser = ImageParser(parserSection, readImage)
+
+                val delayTime = delay * 10L
+
+                frames.add(AnimatedWingFrame(imageParser.resultSet, delayTime))
+            }
+        }
+
+        return AnimatedWing(frames,
+                playerVectorMultiplier, pitchRad, yawRadAddition,
+                itemName, itemMaterial, loreList,
+                permission)
+    }
+
+    private fun parseNormal(section: ConfigurationSection,
+                            playerVectorMultiplier: Double,
+                            pitchRad: Double, yawRadAddition: Double,
+                            itemName: String, itemMaterial: Material, loreList: List<String>,
+                            permission: String): Wing {
+
         val image: BufferedImage
 
         try {
             image = ImageIO.read(imagePath.toFile())
         } catch (e: IOException) {
-            ImageWings.instance.logger.warning("Couldn't read from file '${imagePath.toAbsolutePath()}'. Are you sure the image is valid. Jpg and png work," +
-                    "others might")
+            ImageWings.instance.logger.warning("Couldn't read from file '${imagePath.toAbsolutePath()}'." +
+                    " Are you sure the image is valid. Jpg and png work, others might")
             throw IllegalArgumentException("Image invalid", e)
         }
 
         val imageParser = ImageParser(section.getConfigurationSection("parser"), image)
-        wing = Wing(imageParser.resultSet, playerVectorMultiplier, pitchRad, yawRadAddition, itemName, itemMaterial, loreList, permission)
+        return Wing(imageParser.resultSet, playerVectorMultiplier, pitchRad, yawRadAddition, itemName, itemMaterial, loreList, permission)
     }
 }
 

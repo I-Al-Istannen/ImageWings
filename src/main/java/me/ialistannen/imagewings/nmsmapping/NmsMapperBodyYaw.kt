@@ -4,6 +4,8 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil
 import me.ialistannen.imagewings.ImageWings
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.LivingEntity
+import java.lang.reflect.Field
+import java.lang.reflect.Method
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
@@ -16,6 +18,8 @@ object NmsMapperBodyYaw {
 
     private val currentName: String?
     private val filePath = ImageWings.instance.dataFolder.toPath().resolve("mappings").resolve("mappings.yml")
+    private var handleMethod: Method? = null
+    private var yawField: Field? = null
 
     init {
         if (Files.notExists(filePath)) {
@@ -38,9 +42,17 @@ object NmsMapperBodyYaw {
             return null
         }
 
-        val handle = entity.javaClass.getMethod("getHandle").invoke(entity)
+        if (handleMethod == null) {
+            handleMethod = entity.javaClass.getMethod("getHandle")
+        }
 
-        return 180 - handle.javaClass.getField(currentName).getFloat(handle)
+        val handle = handleMethod!!.invoke(entity)
+
+        if (yawField == null) {
+            yawField = handle.javaClass.getField(currentName)
+        }
+
+        return 180 - yawField!!.getFloat(handle)
     }
 
     private class MapperReader(path: Path) {

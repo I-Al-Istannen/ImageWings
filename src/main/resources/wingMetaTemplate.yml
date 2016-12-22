@@ -27,6 +27,10 @@ pitch_rad: PI
 # In radian. May be an equation like "3 + 5 * PI / 20"
 yaw_rad_addition: PI
 
+# The type of the parser
+# May be "animated" or "normal". Animated is an animated gif
+parser_type: "normal"
+
 # The parser section
 parser:
   # The x scale of the image. Smaller ==> Smaller wings
