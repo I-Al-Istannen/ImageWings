@@ -1,6 +1,5 @@
 package me.ialistannen.imagewings.parser
 
-import com.udojava.evalex.Expression
 import me.ialistannen.imagewings.ImageWings
 import me.ialistannen.imagewings.wings.AnimatedWing
 import me.ialistannen.imagewings.wings.AnimatedWingFrame
@@ -37,8 +36,12 @@ class Parser(section: ConfigurationSection) {
 
         playerVectorMultiplier = ensureGetDouble(section, "player_vector_multiplier")
 
-        pitchRad = Expression(ensureGetString(section, "pitch_rad")).eval().toDouble()
-        yawRadAddition = Expression(ensureGetString(section, "yaw_rad_addition")).eval().toDouble()
+        pitchRad = ensureGetString(section, "pitch_rad")
+                .replace("PI", Math.PI.toString())
+                .toDouble()
+        yawRadAddition = ensureGetString(section, "yaw_rad_addition")
+                .replace("PI", Math.PI.toString())
+                .toDouble()
 
         val itemName = ensureGetString(section, "item_name")
         val loreList = ensureGetStringList(section, "item_lore")
