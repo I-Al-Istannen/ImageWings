@@ -1,12 +1,12 @@
 # The mappings for the version.
 # DO NOT MODIFY IF YOU DO NOT KNOW WHAT YOU ARE DOING!
 
-# This contains the name of the "renderedYawOffset" (MCP renamed) field in the EntityLivingBase class.
+# This contains the name of the "renderYawOffset" (MCP renamed) field in the EntityLivingBase class.
 # It is used to align the wings with the players/entities body and not the direction they look in
 
 # Format: 
 # "version <Major>.<Minor>.<Patch> to <Major>.<Minor>.<Patch> is <variable name>"
-# Yes, whitepaces are important. And yes, you do need all THREE parts, major minor and patch
+# Yes, whitespaces are important. And yes, you do need all THREE parts, major minor and patch
 mappings:
 - version 1.7.0 to 1.7.10 is aM
 - version 1.8.0 to 1.8.7 is aG
@@ -14,3 +14,4 @@ mappings:
 - version 1.9.0 to 1.9.3 is aM
 - version 1.9.4 to 1.9.9 is aN
 - version 1.10.0 to 1.10.10 is aO
+- version 1.11.0 to 1.11.0 is aq
