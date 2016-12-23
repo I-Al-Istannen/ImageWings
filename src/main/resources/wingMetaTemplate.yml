@@ -20,11 +20,11 @@ permission: "imageWings.example.wing"
 # If this is positive, the wing will be in front of the player.
 player_vector_multiplier: -0.2
 # The Pitch angle. Rotates around the x axis
-# In radian. May be an equation like "3 + 5 * PI / 20"
+# In radian. It understands "PI".
 pitch_rad: PI
 # The yaw angle addition. Rotates around the y axis.
 # The base is "-1 * playerYaw", to make it appear behind the player
-# In radian. May be an equation like "3 + 5 * PI / 20"
+# In radian. It understands "PI".
 yaw_rad_addition: PI
 
 # The type of the parser
