@@ -14,8 +14,8 @@ import com.perceivedev.perceivecore.gui.components.simple.SimpleLabel
 import com.perceivedev.perceivecore.gui.components.simple.StandardDisplayTypes
 import com.perceivedev.perceivecore.gui.util.Dimension
 import com.perceivedev.perceivecore.util.ItemFactory
-import com.perceivedev.perceivecore.util.text.TextUtils
 import me.ialistannen.imagewings.ImageWings
+import me.ialistannen.imagewings.wings.Wing
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.enchantments.Enchantment
@@ -78,7 +78,8 @@ class CommandEquip : TranslatedCommandNode(
 
                                 gui.reRender()
                             },
-                            Dimension.ONE
+                            Dimension.ONE,
+                            wing
                     ))
                 }
 
@@ -91,12 +92,13 @@ class CommandEquip : TranslatedCommandNode(
 /**
  * A Button that changes its enchanted state based on if the wing it represents is selected!
  */
-class WingButton(itemStack: ItemStack, clickHandler: Consumer<ClickEvent>, size: Dimension) : Button(itemStack, clickHandler, size) {
+class WingButton(itemStack: ItemStack, clickHandler: Consumer<ClickEvent>, size: Dimension, val wing: Wing)
+    : Button(itemStack, clickHandler, size) {
 
     override fun render(inventory: Inventory, player: Player, xOffset: Int, yOffset: Int) {
-        val itemName = ImageWings.wingDisplayManager.getPlayerWing(player)?.itemName
+        val currentWing = ImageWings.wingDisplayManager.getPlayerWing(player)
 
-        if (itemName == null) {
+        if (currentWing == null) {
             itemStack = ItemFactory.builder(itemStack).removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL).build()
             super.render(inventory, player, xOffset, yOffset)
             return
@@ -104,7 +106,7 @@ class WingButton(itemStack: ItemStack, clickHandler: Consumer<ClickEvent>, size:
 
         val itemFactory = ItemFactory.builder(itemStack)
 
-        if (itemName.color() == (itemStack?.itemMeta?.displayName ?: "").color()) {
+        if (currentWing == wing) {
             itemFactory.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
         } else {
             itemFactory.removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL)
@@ -113,10 +115,6 @@ class WingButton(itemStack: ItemStack, clickHandler: Consumer<ClickEvent>, size:
         itemStack = itemFactory.build()
 
         super.render(inventory, player, xOffset, yOffset)
-    }
-
-    private fun String.color(): String {
-        return TextUtils.colorize(this)
     }
 }
 

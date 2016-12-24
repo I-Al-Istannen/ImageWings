@@ -7,6 +7,7 @@ import com.perceivedev.perceivecore.command.DefaultTabCompleter
 import com.perceivedev.perceivecore.language.I18N
 import me.ialistannen.imagewings.command.CommandImageWings
 import me.ialistannen.imagewings.display.WingDisplayManager
+import me.ialistannen.imagewings.example.copyExampleWing
 import me.ialistannen.imagewings.wings.WingIndexer
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -62,6 +63,8 @@ class ImageWings : JavaPlugin() {
 
         language = I18N(this, "me.ialistannen.imagewings.language")
 
+        copyExampleWing(dataFolder.toPath().resolve("images"))
+        
         reloadConfigs()
         reloadWings()
     }
