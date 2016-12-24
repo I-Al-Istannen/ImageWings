@@ -52,6 +52,26 @@ fun ensureGetInt(section: ConfigurationSection, key: String): Int {
 }
 
 /**
+ * Returns the Int from the [ConfigurationSection], if any. Throws an exception if an error occurred.
+ *
+ * @param key The key
+ * @param section The [ConfigurationSection] to get it from
+ * @param range The [IntRange] the number must be inside
+ *
+ * @throws IllegalArgumentException if the key is missing or not a Int
+ */
+fun ensureGetBoundedInt(section: ConfigurationSection, key: String, range: IntRange): Int {
+    if (!section.isInt(key)) {
+        throw IllegalArgumentException("Section '${section.currentPath}' misses key '$key' or it is not a Int")
+    }
+    val int = section.getInt(key)
+    if (int !in range) {
+        throw IllegalArgumentException("The key '$key' in '${section.currentPath}' is not in the accepted range ($range)")
+    }
+    return int
+}
+
+/**
  * Returns the StringList from the [ConfigurationSection], if any. Throws an exception if an error occurred.
  *
  * @param key The key

@@ -23,8 +23,10 @@ class ImageParser(var xScale: Double, var yScale: Double,
 
     constructor(section: ConfigurationSection, image: BufferedImage) : this(
             xScale = ensureGetDouble(section, "xScale"), yScale = ensureGetDouble(section, "yScale"),
-            xOffsetAbsolute = ensureGetDouble(section, "xOffsetAbsolute"), yOffsetAbsolute = ensureGetDouble(section, "yOffsetAbsolute"),
-            xGranularity = ensureGetInt(section, "xGranularity"), yGranularity = ensureGetInt(section, "yGranularity"),
+            xOffsetAbsolute = ensureGetDouble(section, "xOffsetAbsolute"),
+            yOffsetAbsolute = ensureGetDouble(section, "yOffsetAbsolute"),
+            xGranularity = ensureGetBoundedInt(section, "xGranularity", 1..Int.MAX_VALUE),
+            yGranularity = ensureGetBoundedInt(section, "yGranularity", 1..Int.MAX_VALUE),
             colourMapper = ColourMapper(ensureGetStringList(section, "colourMapper")),
             image = image) {
     }
