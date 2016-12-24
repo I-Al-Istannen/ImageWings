@@ -59,12 +59,11 @@ fun ensureGetInt(section: ConfigurationSection, key: String): Int {
  * @param range The [IntRange] the number must be inside
  *
  * @throws IllegalArgumentException if the key is missing or not a Int
+ *
+ * @see ensureGetInt
  */
 fun ensureGetBoundedInt(section: ConfigurationSection, key: String, range: IntRange): Int {
-    if (!section.isInt(key)) {
-        throw IllegalArgumentException("Section '${section.currentPath}' misses key '$key' or it is not a Int")
-    }
-    val int = section.getInt(key)
+    val int = ensureGetInt(section, key)
     if (int !in range) {
         throw IllegalArgumentException("The key '$key' in '${section.currentPath}' is not in the accepted range ($range)")
     }
