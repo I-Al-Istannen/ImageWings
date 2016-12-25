@@ -59,7 +59,7 @@ class ImageWings : JavaPlugin() {
         saveDefaultConfig()
 
         // TODO: TRUE -> FALSE
-        I18N.copyDefaultFiles(this, true, "me.ialistannen.imagewings.language")
+        I18N.copyDefaultFiles(this, false, "me.ialistannen.imagewings.language")
 
         language = I18N(this, "me.ialistannen.imagewings.language")
 
