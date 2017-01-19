@@ -1,10 +1,10 @@
 package me.ialistannen.imagewings.command
 
-import com.perceivedev.perceivecore.PerceiveCore
 import com.perceivedev.perceivecore.command.CommandResult
 import com.perceivedev.perceivecore.command.CommandSenderType
 import com.perceivedev.perceivecore.command.TranslatedCommandNode
-import com.perceivedev.perceivecore.util.ItemFactory
+import com.perceivedev.perceivecore.coreplugin.PerceiveCore
+import com.perceivedev.perceivecore.utilities.item.ItemFactory
 import me.ialistannen.imagewings.ImageWings
 import me.ialistannen.imagewings.interactiveeditor.ArmorStandEditor
 import me.ialistannen.imagewings.interactiveeditor.DummyEditor

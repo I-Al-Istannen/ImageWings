@@ -37,7 +37,7 @@ class ImageWings : JavaPlugin() {
          * @return The translated Message
          */
         fun tr(key: String, vararg formattingObjects: Any): String {
-            return language.tr(key, *formattingObjects)
+            return language.translate(key, *formattingObjects)
         }
 
         /**
@@ -49,7 +49,7 @@ class ImageWings : JavaPlugin() {
          * @return The translated Message
          */
         fun trWithPrefix(key: String, vararg formattingObjects: Any): String {
-            return language.tr("prefix") + language.tr(key, *formattingObjects)
+            return language.translate("prefix") + language.translate(key, *formattingObjects)
         }
     }
 
@@ -110,7 +110,7 @@ class ImageWings : JavaPlugin() {
         reloadConfig()
 
         // un-register old command
-        CommandSystemUtil.unregisterCommand(language.tr("command.main.keyword"))
+        CommandSystemUtil.unregisterCommand(language.translate("command.main.keyword"))
 
         language.reload()
         language.language = Locale.forLanguageTag(config.getString("language"))

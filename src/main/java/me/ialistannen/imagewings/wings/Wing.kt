@@ -1,6 +1,6 @@
 package me.ialistannen.imagewings.wings
 
-import com.perceivedev.perceivecore.util.math.RotationMatrices
+import com.perceivedev.perceivecore.particle.math.RotationMatrices
 import me.ialistannen.imagewings.nmsmapping.NmsMapperBodyYaw
 import org.bukkit.Location
 import org.bukkit.Material

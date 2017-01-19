@@ -9,11 +9,9 @@ import com.perceivedev.perceivecore.gui.base.Component
 import com.perceivedev.perceivecore.gui.base.Pane
 import com.perceivedev.perceivecore.gui.components.Button
 import com.perceivedev.perceivecore.gui.components.panes.AnchorPane
-import com.perceivedev.perceivecore.gui.components.simple.DisplayColor
-import com.perceivedev.perceivecore.gui.components.simple.SimpleLabel
-import com.perceivedev.perceivecore.gui.components.simple.StandardDisplayTypes
+import com.perceivedev.perceivecore.gui.components.simple.SimplerLabel
 import com.perceivedev.perceivecore.gui.util.Dimension
-import com.perceivedev.perceivecore.util.ItemFactory
+import com.perceivedev.perceivecore.utilities.item.ItemFactory
 import me.ialistannen.imagewings.ImageWings
 import me.ialistannen.imagewings.wings.Wing
 import org.bukkit.Material
@@ -187,7 +185,7 @@ class PagedPane(width: Int, height: Int) : AnchorPane(width, height) {
     private fun addNewPane() {
         val pane = AnchorPane(width, height)
 
-        pane.addComponent(SimpleLabel(Dimension(9, 1), StandardDisplayTypes.FLAT, DisplayColor.BLACK, " "), 0, height - 2)
+        pane.addComponent(SimplerLabel.builder().setSize(9, 1).build(), 0, height - 2)
         pages.add(pane)
     }
 

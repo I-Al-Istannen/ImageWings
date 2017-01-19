@@ -1,6 +1,6 @@
 package me.ialistannen.imagewings.parser
 
-import com.perceivedev.perceivecore.util.ItemFactory
+import com.perceivedev.perceivecore.utilities.item.ItemFactory
 import me.ialistannen.imagewings.ImageWings
 import org.bukkit.Location
 import org.bukkit.Material

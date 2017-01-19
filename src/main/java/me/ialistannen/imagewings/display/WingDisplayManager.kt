@@ -2,7 +2,7 @@ package me.ialistannen.imagewings.display
 
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
-import com.perceivedev.perceivecore.time.DurationParser
+import com.perceivedev.perceivecore.utilities.time.DurationParser
 import me.ialistannen.imagewings.ImageWings
 import me.ialistannen.imagewings.wings.Wing
 import org.bukkit.Bukkit
